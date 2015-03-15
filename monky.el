@@ -42,6 +42,11 @@
   :group 'monky
   :type '(repeat string))
 
+(defcustom monky-qrefresh-options '("--short")
+  "Options when running hg qrefresh."
+  :group 'monky
+  :type '(repeat string))
+
 (defcustom monky-hg-process-environment '("TERM=dumb" "HGPLAIN=" "LANGUAGE=C")
   "Default environment variables for hg."
   :group 'monky
@@ -2607,7 +2612,7 @@ With a non numeric prefix ARG, show all entries"
   (if (not current-prefix-arg)
       (apply #'monky-run-hg "qrefresh"
              "--config" "extensions.mq="
-             (append monky-staged-files monky-queue-staged-files))
+             (append monky-qrefresh-options monky-staged-files monky-queue-staged-files))
     ;; get last commit message
     (with-current-buffer (get-buffer-create monky-log-edit-buffer-name)
       (monky-hg-insert
@@ -2839,7 +2844,7 @@ With a non numeric prefix ARG, show all entries"
                 monky-hg-executable "qrefresh"
                 "--config" "extensions.mq="
                 "--logfile" "-"
-                (append monky-staged-files monky-queue-staged-files))))
+                (append monky-qrefresh-options monky-staged-files monky-queue-staged-files))))
       ('qreorder
        (let* ((queue-buffer (monky-find-buffer 'queue))
 	      (series (with-current-buffer queue-buffer
