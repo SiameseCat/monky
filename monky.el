@@ -1851,6 +1851,17 @@ before the last command."
     (format "\t%-10s %s\n" (capitalize (symbol-name status)) file)
     'face 'monky-diff-title)))
 
+(defun monky-ediff ()
+  "Show diff (using ediff) for item at point."
+  (interactive)
+  (monky-section-case (item info)
+	((file)
+	 (vc-version-ediff (list info) nil nil))
+	((diff)
+	 (vc-version-ediff (list (monky-diff-item-file item)) nil nil))
+	((hunk)
+	 (vc-version-ediff (list (monky-diff-item-file (monky-hunk-item-diff item))) nil nil))))
+
 ;;; Untracked files
 
 (defun monky-insert-untracked-files ()
